@@ -1,0 +1,698 @@
+1. Two Sum
+
+Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+You can return the answer in any order.
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        
+        lookup = {}
+        for i, num in enumerate(nums):
+            if target - num in lookup:
+                return [lookup[target - num], i]
+            lookup[num] = i
+        return []
+______________________________________________________________________________
+3. Longest Substring Without Repeating Characters
+
+Given a string s, find the length of the longest 
+substring
+ without repeating characters.
+
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        if s == '':
+            return 0
+        start = 0
+        end = 0
+        max_length = 0
+        uniqs = set()
+        while end < len(s):
+            if s[end] not in uniqs:
+                uniqs.add(s[end])
+                end += 1
+                max_length = max(max_length, len(uniqs))
+            else:
+                uniqs.remove(s[start])
+                start += 1
+        return max_length
+
+______________________________________________________________________________
+
+4. Median of Two Sorted Arrays
+
+Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
+
+The overall run time complexity should be O(log (m+n)).
+
+from statistics import median
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        res = sorted(nums1 + nums2)
+        return median(res)
+
+______________________________________________________________________________
+
+7. Reverse Integer
+
+Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0.
+
+Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
+
+class Solution:
+    def reverse(self, x: int) -> int:
+        if x < 0:
+            x = str(x)
+            rev = -int(x[1:][::-1])
+            if rev >= -2**31:
+                return rev
+            else:
+                return 0
+        else:
+            x = str(x)
+            rev = int(x[::-1])
+            if rev <= 2**31-1:
+                return rev
+            else:
+                return 0
+
+______________________________________________________________________________
+
+9. Palindrome Number
+
+Given an integer x, return true if x is a 
+palindrome, and false otherwise.
+
+class Solution:
+    def isPalindrome(self, x: int) -> bool:
+        y = str(x)[::-1].replace('-', '')
+        return x == (int(y))
+
+______________________________________________________________________________
+
+13. Roman to Integer
+
+Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+
+Symbol       Value
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+For example, 2 is written as II in Roman numeral, just two ones added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
+
+Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
+
+I can be placed before V (5) and X (10) to make 4 and 9. 
+X can be placed before L (50) and C (100) to make 40 and 90. 
+C can be placed before D (500) and M (1000) to make 400 and 900.
+Given a roman numeral, convert it to an integer.
+
+class Solution:
+    def romanToInt(self, s: str) -> int:
+        roman = {'I': 1, 'V': 5, 'X': 10,
+                 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
+        prev, total = 0, 0
+        for c in s:
+            curr = roman[c]
+            total += curr
+            if curr > prev:
+                total -= 2 * prev
+            prev = curr
+        return total
+
+______________________________________________________________________________
+
+14. Longest Common Prefix
+
+Write a function to find the longest common prefix string amongst an array of strings.
+
+If there is no common prefix, return an empty string "".
+
+import os.path as p
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        return p.commonprefix(strs)
+
+______________________________________________________________________________
+
+7. Letter Combinations of a Phone Number
+
+Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.
+
+A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+
+from itertools import product
+class Solution:
+    def letterCombinations(self, digits: str) -> List[str]:
+        d = {
+            2: 'abc',
+            3: 'def',
+            4: 'ghi',
+            5: 'jkl',
+            6: 'mno',
+            7: 'pqrs',
+            8: 'tuv',
+            9: 'wxyz'
+        }
+        lis = []
+        if digits == '':
+            return []
+        if int(digits) <= 9:
+            return d[int(digits)]
+        else:
+            if int(digits) <= 99:
+                first = int(digits[0])
+                second = int(digits[1])
+                for i, j in product(d[first], d[second]):
+                    lis.append(i+j)
+                return lis
+            elif int(digits) <= 999:
+                first = int(digits[0])
+                second = int(digits[1])
+                third = int(digits[2])
+                for i, j, k in product(d[first], d[second], d[third]):
+                    lis.append(i+j+k)
+                return lis
+            else:
+                first = int(digits[0])
+                second = int(digits[1])
+                third = int(digits[2])
+                four = int(digits[3])
+                for i, j, k, l in product(d[first], d[second], d[third], d[four]):
+                    lis.append(i+j+k + l)
+                return lis
+
+______________________________________________________________________________
+
+20. Valid Parentheses
+
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+Open brackets must be closed by the same type of brackets.
+Open brackets must be closed in the correct order.
+Every close bracket has a corresponding open bracket of the same type.
+
+class Solution:
+    def isValid(self, s: str) -> bool:
+        if len(s) % 2 != 0:
+            return False
+        stack = []
+        mydict = {
+            '(': ')',
+            '[': ']',
+            '{': '}'
+            
+        }
+        closed_breckets = ')]}'
+        open_breckets = '([{'
+        for el in s:
+            if el in open_breckets:
+                stack.append(el)
+            else:
+                if not stack:
+                    return False
+                last_item = stack[-1]
+                if mydict[last_item] == el:
+                    stack.pop()
+                else:
+                    return False
+        return not bool(stack)
+
+______________________________________________________________________________
+
+21. Merge Two Sorted Lists
+
+You are given the heads of two sorted linked lists list1 and list2.
+
+Merge the two lists in a one sorted list. The list should be made by splicing together the nodes of the first two lists.
+
+Return the head of the merged linked list.
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+  def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        head = new_list = ListNode(0)
+        while l1 and l2:
+            if l1.val < l2.val:
+                new_list.next = l1
+                l1 = l1.next  
+            else:
+                new_list.next = l2
+                l2 = l2.next
+            new_list = new_list.next
+
+        new_list.next = l1 or l2
+        return head.next
+
+______________________________________________________________________________
+
+22. Generate Parentheses
+
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+class Solution:
+    def generateParenthesis(self, n: int) -> List[str]:
+        ans = []
+
+        def dfs(l:int, r: int, s:str) -> None:
+            if l == 0 and r == 0:
+                ans.append(s)
+            if l > 0:
+                dfs(l-1, r, s + '(')
+            if l < r:
+                dfs(l, r-1, s + ')')
+        dfs(n, n, '')
+        return ans
+
+______________________________________________________________________________
+
+
+26. Remove Duplicates from Sorted Array
+
+Given an integer array nums sorted in non-decreasing order, remove the duplicates in-place such that each unique element appears only once. The relative order of the elements should be kept the same. Then return the number of unique elements in nums.
+
+Consider the number of unique elements of nums to be k, to get accepted, you need to do the following things:
+
+Change the array nums such that the first k elements of nums contain the unique elements in the order they were present in nums initially. The remaining elements of nums are not important as well as the size of nums.
+Return k.
+Custom Judge:
+
+The judge will test your solution with the following code:
+
+int[] nums = [...]; // Input array
+int[] expectedNums = [...]; // The expected answer with correct length
+
+int k = removeDuplicates(nums); // Calls your implementation
+
+assert k == expectedNums.length;
+for (int i = 0; i < k; i++) {
+    assert nums[i] == expectedNums[i];
+}
+If all assertions pass, then your solution will be accepted.
+
+class Solution:
+  def removeDuplicates(self, nums: List[int]) -> int:
+    i = 0
+
+    for num in nums:
+      if i < 1 or num > nums[i - 1]:
+        nums[i] = num
+        i += 1
+
+    return i
+
+______________________________________________________________________________
+
+27. Remove Element
+
+Given an integer array nums and an integer val, remove all occurrences of val in nums in-place. The order of the elements may be changed. Then return the number of elements in nums which are not equal to val.
+
+Consider the number of elements in nums which are not equal to val be k, to get accepted, you need to do the following things:
+
+Change the array nums such that the first k elements of nums contain the elements which are not equal to val. The remaining elements of nums are not important as well as the size of nums.
+Return k.
+Custom Judge:
+
+The judge will test your solution with the following code:
+
+int[] nums = [...]; // Input array
+int val = ...; // Value to remove
+int[] expectedNums = [...]; // The expected answer with correct length.
+                            // It is sorted with no values equaling val.
+
+int k = removeElement(nums, val); // Calls your implementation
+
+assert k == expectedNums.length;
+sort(nums, 0, k); // Sort the first k elements of nums
+for (int i = 0; i < actualLength; i++) {
+    assert nums[i] == expectedNums[i];
+}
+If all assertions pass, then your solution will be accepted.
+
+class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        counter = 0
+        for i in range(len(nums)):
+            if nums[i] != val:
+                nums[counter] = nums[i]
+                counter += 1
+        return counter
+
+______________________________________________________________________________
+
+28. Find the Index of the First Occurrence in a String
+
+Given two strings needle and haystack, return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+
+class Solution:
+    def strStr(self, haystack: str, needle: str) -> int:
+        if needle not in haystack:
+            return -1
+        return haystack.index(needle)
+
+______________________________________________________________________________
+
+35. Search Insert Position
+
+Given a sorted array of distinct integers and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
+
+You must write an algorithm with O(log n) runtime complexity.
+
+class Solution:
+       def searchInsert(self, nums, target):
+            l, r = int(0), len(nums) - 1
+            while l < r:
+                mid = int((l + r) / 2)
+                if nums[mid] < target:
+                    l = mid + 1
+                else:
+                    r = mid
+            if nums[l] < target:
+                return l + 1
+            return l 
+______________________________________________________________________________
+
+
+58. Length of Last Word
+
+Given a string s consisting of words and spaces, return the length of the last word in the string.
+
+A word is a maximal 
+substring
+ consisting of non-space characters only.
+
+class Solution:
+    def lengthOfLastWord(self, s: str) -> int:
+        splited = s.split(' ')
+        return len((s.rsplit()[-1]))
+
+______________________________________________________________________________
+
+66. Plus One
+
+You are given a large integer represented as an integer array digits, where each digits[i] is the ith digit of the integer. The digits are ordered from most significant to least significant in left-to-right order. The large integer does not contain any leading 0's.
+
+Increment the large integer by one and return the resulting array of digits.
+
+class Solution:
+    def plusOne(self, digits: List[int]) -> List[int]:
+        res = [str(i) for i in digits]
+        res = int(''.join(res)) + 1
+        ans = [int(i) for i in str(res)]
+        return ans
+
+______________________________________________________________________________
+
+69. Sqrt(x)
+
+Given a non-negative integer x, return the square root of x rounded down to the nearest integer. The returned integer should be non-negative as well.
+
+You must not use any built-in exponent function or operator.
+
+For example, do not use pow(x, 0.5) in c++ or x ** 0.5 in python.
+
+import math
+class Solution:
+    def mySqrt(self, x: int) -> int:
+        return int(math.sqrt(x))
+
+______________________________________________________________________________
+
+70. Climbing Stairs
+
+You are climbing a staircase. It takes n steps to reach the top.
+
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        if n == 1: 
+            return 1
+        f = [None for _ in range(2)]
+        f[0] = 1
+        f[1] = 2
+        for _ in range(2, n):
+            new = f[0] + f[1]
+            f[0], f[1] = f[1], new
+        return f[1]
+
+______________________________________________________________________________
+
+83. Remove Duplicates from Sorted List
+
+Given the head of a sorted linked list, delete all duplicates such that each element appears only once. Return the linked list sorted as well.
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        dummy = ListNode(0)
+        dummy.next = head
+        visited = set()
+        while head and head.next:
+            visited.add(head.val)
+            while head.next and head.next.val in visited:
+                head.next = head.next.next
+            head = head.next
+        return dummy.next
+
+______________________________________________________________________________
+
+100. Same Tree
+
+Given the roots of two binary trees p and q, write a function to check if they are the same or not.
+
+Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+        if not p or not q:
+            return p == q
+        return p.val == q.val and self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)
+
+______________________________________________________________________________
+
+125. Valid Palindrome
+
+A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+
+Given a string s, return true if it is a palindrome, or false otherwise.
+
+class Solution:
+    def isPalindrome(self, string: str) -> bool:
+        string = ''.join([x for x in string if x.isalnum()]).lower()
+        start = 0
+        end = len(string) - 1
+        cnt = 0
+        N = len(string)
+        for i in range(N):
+            if string[start] == string[end]:
+                cnt += 1
+                start += 1 
+                end -= 1 
+            else:
+                return False
+        return cnt == len(string)
+
+______________________________________________________________________________
+
+136. Single Number
+
+Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
+
+You must implement a solution with a linear runtime complexity and use only constant extra space.
+
+
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        res = 0
+        for num in nums:
+            res ^= num
+        return res
+
+______________________________________________________________________________
+
+Given head, the head of a linked list, determine if the linked list has a cycle in it.
+
+There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer. Internally, pos is used to denote the index of the node that tail's next pointer is connected to. Note that pos is not passed as a parameter.
+
+Return true if there is a cycle in the linked list. Otherwise, return false.
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        lis = set()
+        while head:
+            if head not in lis:
+                lis.add(head)
+            else:
+                return True
+            
+            head = head.next
+        return False
+
+______________________________________________________________________________
+
+179. Largest Number
+
+Given a list of non-negative integers nums, arrange them such that they form the largest number and return it.
+
+Since the result may be very large, so you need to return a string instead of an integer.
+
+class Solution:
+    def largestNumber(self, arr: List[int]) -> str:
+        n = len(arr)
+        for i in range(n-1):
+            for j in range(i+1, n):
+                if str(arr[i]) + str(arr[j]) < str(arr[j]) + str(arr[i]):
+                    arr[i], arr[j] = arr[j], arr[i]
+        return ''.join(map(str, arr)) if int(''.join(map(str, arr))) > 0 else '0'
+
+______________________________________________________________________________
+
+187. Repeated DNA Sequences
+
+The DNA sequence is composed of a series of nucleotides abbreviated as 'A', 'C', 'G', and 'T'.
+
+For example, "ACGAATTCCG" is a DNA sequence.
+When studying DNA, it is useful to identify repeated sequences within the DNA.
+
+Given a string s that represents a DNA sequence, return all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule. You may return the answer in any order.
+
+class Solution:
+    def findRepeatedDnaSequences(self, s: str) -> List[str]:
+        freq = defaultdict(int)
+        for i in range(len(s) - 9):
+            freq[s[i:i+10]] += 1
+        res = []
+        
+        for substr, count in freq.items():
+            if count > 1:
+                res.append(substr)
+        return res
+
+______________________________________________________________________________
+
+189. Rotate Array
+
+Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
+
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        k = k % len(nums)
+        nums[:] = nums[-k:] + nums[:-k]
+
+______________________________________________________________________________
+
+202. Happy Number
+
+Write an algorithm to determine if a number n is happy.
+
+A happy number is a number defined by the following process:
+
+Starting with any positive integer, replace the number by the sum of the squares of its digits.
+Repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1.
+Those numbers for which this process ends in 1 are happy.
+Return true if n is a happy number, and false if not.
+
+import math
+class Solution:
+    def isHappy(self, n: int) -> bool:
+        copy = str(n)
+        square = n
+        while True : #inifinte loop
+            square = sum(int(j) ** 2 for j in list(str(square))) #Sum of the number's digit squares
+            if square == 1:
+                test = True
+                break
+            elif square == 4:
+                test = False
+                break
+        return test
+
+______________________________________________________________________________
+
+204. Count Primes
+
+Given an integer n, return the number of prime numbers that are strictly less than n.
+
+class Solution:
+    def countPrimes(self, n: int) -> int:
+        if n < 2:
+            return 0
+        primes = [True] * n
+        primes[0] = primes[1] = False
+        for i in range(2, int(n ** 0.5) + 1):
+            if primes[i]:
+                primes[i*i:n:i] = [False] * ((n-1-i*i)//i + 1)
+        return sum(primes)
+
+______________________________________________________________________________
+
+217. Contains Duplicate
+
+Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
+
+class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        if len(set(nums)) == len(nums):
+            return False
+        return True
+
+______________________________________________________________________________
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
